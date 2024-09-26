@@ -1,0 +1,121 @@
+/* General font style for the entire app */
+body, .content-wrapper, .right-side, .main-footer, .main-header, .sidebar, .control-sidebar {
+    font-family: 'Mulish', sans-serif;
+}
+
+/* Style container to remove list style and position correctly */
+.header-title-container {
+    list-style: none;  /* Removes the bullet point */
+    width: 100%;
+    position: absolute;
+    left: 0;
+    top: 0;  /* Adjust top position as needed */
+    padding: 0;  /* Removes padding that might affect alignment */
+    margin: 0;  /* Ensures no extra space around the element */
+}
+
+/* Ensure the header title is centered across the entire header */
+.header-title {
+    color: #17a2b8;  /* Ensuring color is black as specified */
+    font-size: 20px;  /* Adjust font size as needed */
+    text-align: center;
+    font-weight: bold;  
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    top: 15px;  /* Adjust this value based on your header's height */
+    z-index: 999;
+}
+
+/* Remove default navbar-brand which might be showing */
+.navbar-brand {
+    display: none;  /* Hides any default navbar branding */
+}
+
+/* Additional padding to push sidebar items down */
+.sidebar-menu {
+    padding-top: 80px; 
+}
+
+/* Set the background color of the sidebar */
+.main-sidebar {
+    background-color: #dad8d4 !important;  /* Apply the desired color */
+}
+
+/* Optional: Adjust text color to improve contrast */
+.sidebar-menu .nav-link {
+    color: #333333; /* Adjust this as needed for better contrast */
+}
+
+.sidebar-menu .nav-link:hover {
+    background-color: #e0dedb; /* A hover color similar to the background */
+}
+
+.control-bar {
+    position: absolute;
+    right: 0; 
+    top: 50%; 
+    transform: translateY(-50%);
+  }
+  
+  .control-button {
+    margin-right: 10px; 
+    background-color: #f4f2ee;
+  }
+
+    /* Sidebar Footer*/
+.sidebar-footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    text-align: left;
+    padding: 10px;
+  }
+  
+  .sidebar-footer img {
+    height: 60px;
+  }
+
+    /* CSS for select input styling */
+    #divisionSelectContainer {
+        width: 30%; /* Adjust the width of the select input as needed */
+        float: left; /* Align to the left */
+        margin-right: 20px; /* Add some space to the right of the select input */
+    }
+    
+
+/* Footer styling */
+.body-footer {
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    background-color: #f4f2ee;
+    color: black;
+    text-align: center;
+    padding: 10px;
+    z-index: 1030;
+}
+
+/* Data table header styling */
+.dataTables_wrapper .dataTables_filter {
+    float: none;
+    text-align: center;
+}
+
+/* Enhance center alignment for all columns */
+.dt-center, .dataTable th, .dataTable td {
+    text-align: center !important;
+}
+
+/* Specific header styles for dataTable */
+.dataTable thead th {
+    background-color: #007bff;
+    color: #ffffff;
+    text-align: center !important; /* Ensuring center alignment is enforced */
+}
+
+/* Responsive table adjustments */
+table.dataTable {
+    width: 100% !important; /* Force table width to respect container size */
+}
