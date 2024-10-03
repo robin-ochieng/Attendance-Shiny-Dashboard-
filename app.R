@@ -50,9 +50,9 @@ ui <- dashboardPage(
   tags$div(class = "control-bar", actionButton("toggleControlbar", "Filters", class = "btn btn-primary control-button"))
   ),
   dashboardSidebar(
-    collapsed = TRUE,
-    minified = TRUE,
-    width = 100,
+    collapsed = FALSE,
+    minified = FALSE,
+    width = 150,
     sidebarMenu(
       menuItem("Dashboard", tabName = "metrics", icon = icon("tachometer-alt")),
       #menuItem("Data View", tabName = "dataView", icon = icon("table")),
@@ -75,7 +75,7 @@ ui <- dashboardPage(
       tabItem(tabName = "data2View", earlySignInDataUI("earlySignInDataMod")),
       tabItem(tabName = "data3View", lateSignInDataUI("lateSignInDataMod"))
     ),
-    div(class = "body-footer", "© 2024 Dashboard - All Rights Reserved") 
+    div(class = "body-footer", "© 2024 Attendance Dashboard - Powered by Robin") 
   ),
   title = "Attendance Dashboard",
   skin = "blue",
@@ -87,7 +87,7 @@ ui <- dashboardPage(
     bs4Card(
       width = 12,
       title = "Filters",
-      background = "gray",
+      background = "white",
       class = "bs4-card-custom",
       selectInput(inputId = "attendance_month", label = "Select Month", choices = NULL),
       selectInput(inputId = "attendance_year", label = "Select Year", choices = NULL)

@@ -2,7 +2,7 @@
 lateSignInDataUI <- function(id) {
   ns <- NS(id)
   box(title = "Late SignIns Data",
-      status = "primary",
+      status = "white",
       solidHeader = TRUE,
       collapsible = TRUE,
       width = 12,

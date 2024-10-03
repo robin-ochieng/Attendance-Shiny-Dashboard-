@@ -18,7 +18,7 @@ body, .content-wrapper, .right-side, .main-footer, .main-header, .sidebar, .cont
 .header-title {
     color: #17a2b8;  /* Ensuring color is black as specified */
     font-size: 20px;  /* Adjust font size as needed */
-    text-align: center;
+    text-align: left;
     font-weight: bold;  
     position: absolute;
     left: 50%;
@@ -34,13 +34,20 @@ body, .content-wrapper, .right-side, .main-footer, .main-header, .sidebar, .cont
 
 /* Additional padding to push sidebar items down */
 .sidebar-menu {
-    padding-top: 80px; 
+    padding-top: 140px; 
 }
 
 /* Set the background color of the sidebar */
 .main-sidebar {
-    background-color: #dad8d4 !important;  /* Apply the desired color */
+    background-color: #fff !important;  /* Apply the desired color */
+    width: 250px;
+    padding-bottom: 90px;
 }
+
+
+
+
+
 
 /* Optional: Adjust text color to improve contrast */
 .sidebar-menu .nav-link {
@@ -60,21 +67,30 @@ body, .content-wrapper, .right-side, .main-footer, .main-header, .sidebar, .cont
   
   .control-button {
     margin-right: 10px; 
-    background-color: #f4f2ee;
+    background-color: #ADD8E6;
+    color: black; ;
   }
 
     /* Sidebar Footer*/
 .sidebar-footer {
-    position: absolute;
-    bottom: 0;
-    width: 100%;
-    text-align: left;
-    padding: 10px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 250px;
+    text-align: centre;
+    padding: 10px 0; /* Add padding to give some space around the logo */
+    background-color: #f5f5f5; /* Light background color to distinguish the logo area */
+    border-bottom: 1px solid #ddd;
   }
   
   .sidebar-footer img {
-    height: 60px;
-  }
+    height: 70px; /* Adjust the height of the logo as needed */
+    max-width: 100%; /* Ensure the logo scales within the container */
+    background-color: #ffffff; /* Optional: Add a background behind the logo */
+    border-radius: 8px; /* Optional: Add rounded corners for a modern look */
+    box-shadow: 0 1px 5px rgba(0, 0, 0, 0.1); /* Subtle shadow for a more professional look */
+    padding: 10px; /* Optional: Add a slight shadow around the logo */
+}
 
     /* CSS for select input styling */
     #divisionSelectContainer {
@@ -86,7 +102,7 @@ body, .content-wrapper, .right-side, .main-footer, .main-header, .sidebar, .cont
 
 /* Footer styling */
 .body-footer {
-    position: fixed;
+    position: absolute;
     left: 0;
     bottom: 0;
     width: 100%;

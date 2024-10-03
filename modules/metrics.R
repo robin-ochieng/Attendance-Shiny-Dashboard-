@@ -9,13 +9,13 @@ metricsUI <- function(id) {
     valueBoxOutput(ns("signOutRate"), width = 3)
   ),
   fluidRow(
-      box(title = "Distribution of Attendance by Division", status = "gray", solidHeader = TRUE, 
+      box(title = "Distribution of Attendance by Division", status = "white", solidHeader = TRUE, 
           plotlyOutput(ns("attendanceByDivision")) %>% withSpinner(type = 6)),
-      box(title = "Distribution of Attendance by Time Period", status = "gray", solidHeader = TRUE,
+      box(title = "Distribution of Attendance by Time Period", status = "white", solidHeader = TRUE,
           plotOutput(ns("attendanceByTimePeriod")) %>% withSpinner(type = 6)),
-      box(title = "Trend of Attendance by Time of Signing", status = "gray", solidHeader = TRUE,
+      box(title = "Trend of Attendance by Time of Signing", status = "white", solidHeader = TRUE,
           plotlyOutput(ns("attendance_over_time")) %>% withSpinner(type = 6)),
-      box(title = "Distribution of Attendance by Sign Status", status = "gray", solidHeader = TRUE,
+      box(title = "Distribution of Attendance by Sign Status", status = "white", solidHeader = TRUE,
           plotlyOutput(ns("attendanceByStatus")) %>% withSpinner(type = 6)),
   )
  )
@@ -76,11 +76,11 @@ metricsServer <- function(id, reactiveData, reactiveMetrics) {
     num_categories <- length(unique(count_by_division$`Division`))
     # Create the donut chart
     p <- plot_ly(count_by_division, labels = ~`Division`, values = ~Count, type = 'pie', hole = 0.4,
-                textposition = 'inside', 
+                textposition = 'outside', 
                 textinfo = 'label+value+percent',  
                 insidetextorientation = 'radial',  
                 marker = list(colors = custom_colors_cover),
-                textfont = list(color = 'white', family = "Mulish", size = 12))
+                textfont = list(color = 'black', family = "Mulish", size = 12))
     # Add title and display the plot
     p <- p %>% layout(title = "Distribution of attendance by Division",
                       showlegend = TRUE,

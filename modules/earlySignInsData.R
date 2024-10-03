@@ -2,7 +2,7 @@
 earlySignInDataUI <- function(id) {
   ns <- NS(id)
   box(title = "Early SignIns Data",
-      status = "primary", 
+      status = "white", 
       solidHeader = TRUE, 
       collapsible = TRUE, 
       width = 12, 
@@ -59,7 +59,7 @@ earlySignInDataServer <- function(id, EarlySignInDetails) {
                     ),
                     initComplete = JS(
                     "function(settings, json) {",
-                    "$(this.api().table().header()).css({'background-color': '#007bff', 'color': '#ffffff', 'text-align': 'center'});",
+                    "$(this.api().table().header()).css({'background-color': '#fff', 'color': black, 'text-align': 'center'});",
                     "}"
                     )
                 ))
