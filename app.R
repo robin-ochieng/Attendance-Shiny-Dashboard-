@@ -46,10 +46,12 @@ ui <- dashboardPage(
     ),
   titleWidth = 400,
   controlbarIcon = NULL,
+  sidebarIcon = NULL,
   fixed = TRUE,
   tags$div(class = "control-bar", actionButton("toggleControlbar", "Filters", class = "btn btn-primary control-button"))
   ),
   dashboardSidebar(
+    fixed = TRUE,
     collapsed = FALSE,
     minified = FALSE,
     width = 150,

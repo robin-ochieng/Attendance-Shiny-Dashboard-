@@ -8,7 +8,7 @@ earlySignInDataUI <- function(id) {
       width = 12, 
       maximizable = TRUE,
       div(id = "divisionSelectContainer",
-      selectInput(ns("divisionSelect"), "Select Division:", choices = c("All Divisions", "Advisory", "Corporate and Retail", , "Directors Wing"))
+      selectInput(ns("divisionSelect"), "Select Division:", choices = c("All Divisions", "Advisory", "Corporate and Retail", "Directors Wing"))
       ),
       DTOutput(ns("dataTable2")) %>% withSpinner(type = 6))
 }
