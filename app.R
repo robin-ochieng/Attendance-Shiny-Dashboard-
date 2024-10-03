@@ -42,7 +42,7 @@ ui <- dashboardPage(
   dashboardHeader(
     tags$li(
       class = "text-center header-title-container",  # Added a new class for more specific styling
-      tags$h4("ATTENDANCE DASHBOARD", class = "header-title")
+      tags$h4("Attendance Dashboard", class = "header-title")
     ),
   titleWidth = 400,
   controlbarIcon = NULL,

@@ -63,7 +63,7 @@ metricsServer <- function(id, reactiveData, reactiveMetrics) {
     )
   })
 
-  custom_colors_cover <- c("#1f77b4", "#17a2b8", "#2ca02c", "#2ca02c", "#9467bd", "#F28E2B", "#d62728")
+  custom_colors_cover <- c("#1f77b4", "#17a2b8", "#4ac4b5", "#2ca02c", "#2ca02c", "#F28E2B", "#d62728")
   output$attendanceByDivision <- renderPlotly({
     data <- reactiveData()  # Ensure 'sales_data' is already loaded and contains the right columns
     # Filter out rows where Sales or Type of Cover might be NA
@@ -75,14 +75,14 @@ metricsServer <- function(id, reactiveData, reactiveMetrics) {
     # Generate a qualitative color palette
     num_categories <- length(unique(count_by_division$`Division`))
     # Create the donut chart
-    p <- plot_ly(count_by_division, labels = ~`Division`, values = ~Count, type = 'pie', hole = 0.4,
-                textposition = 'outside', 
+    p <- plot_ly(count_by_division, labels = ~`Division`, values = ~Count, type = 'pie', hole = 0.2,
+                textposition = 'inside', 
                 textinfo = 'label+value+percent',  
-                insidetextorientation = 'radial',  
+                insidetextorientation = 'tangetial',  
                 marker = list(colors = custom_colors_cover),
-                textfont = list(color = 'black', family = "Mulish", size = 12))
+                textfont = list(color = 'white', family = "Mulish", size = 10))
     # Add title and display the plot
-    p <- p %>% layout(title = "Distribution of attendance by Division",
+    p <- p %>% layout(title = "Distribution of Attendance by Division",
                       showlegend = TRUE,
                       font = list(family = "Mulish"))
     p
@@ -129,7 +129,7 @@ metricsServer <- function(id, reactiveData, reactiveMetrics) {
       )
   })
 
-  custom_colors_status <- c("#17a2b8", "#87CEEB",  "#d62728","#1f77b4", "#F28E2B")
+  custom_colors_status <- c("#17a2b8", "#4ac4b5",  "#d62728","#1f77b4", "#F28E2B")
   output$attendanceByStatus <- renderPlotly({
     data <- reactiveData()  
     # Filter out rows where Sales or Type of Cover might be NA
