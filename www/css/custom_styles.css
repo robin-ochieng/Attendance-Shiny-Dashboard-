@@ -74,8 +74,8 @@ body, .content-wrapper, .right-side, .main-footer, .main-header, .sidebar, .cont
     width: 250px;
     text-align: centre;
     padding: 10px 0; /* Add padding to give some space around the logo */
-    background-color: #f5f5f5; /* Light background color to distinguish the logo area */
-    border-bottom: 1px solid #ddd;
+    background-color: #fff; /* Light background color to distinguish the logo area */
+    
   }
   
   .sidebar-footer img {
