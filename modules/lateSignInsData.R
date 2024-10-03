@@ -8,7 +8,7 @@ lateSignInDataUI <- function(id) {
       width = 12,
       maximizable = TRUE,
       div(id = "divisionSelectContainer",
-      selectInput(ns("divisionSelect"), "Select Division:", choices = c("All Divisions", "Advisory", "Corporate and Retail"))
+      selectInput(ns("divisionSelect"), "Select Division:", choices = c("All Divisions", "Advisory", "Corporate and Retail", "Directors Wing"))
        ),
       DTOutput(ns("dataTableLate")) %>% withSpinner(type = 6))
 }
