@@ -33,7 +33,7 @@ metricsServer <- function(id, reactiveData, reactiveMetrics) {
       reactiveMetrics()$Total_Sign_In,
       subtitle = "Total Sign Ins",
       icon = icon("sign-in-alt"),
-      color = "primary"
+      color = "white"
     )
   })
   output$totalSignOut <- renderValueBox({
@@ -41,7 +41,7 @@ metricsServer <- function(id, reactiveData, reactiveMetrics) {
       reactiveMetrics()$Total_Sign_Out,
       subtitle = "Total Sign Outs",
       icon = icon("sign-out-alt"),
-      color = "olive"
+      color = "white"
     )
   })
 
@@ -50,7 +50,7 @@ metricsServer <- function(id, reactiveData, reactiveMetrics) {
       sprintf("%.2f%%", reactiveMetrics()$Sign_In_Rate),
       subtitle = "Sign In Rate",
       icon = icon("percent"),
-      color = "info"
+      color = "white"
     )
   })
 
@@ -59,7 +59,7 @@ metricsServer <- function(id, reactiveData, reactiveMetrics) {
       sprintf("%.2f%%", reactiveMetrics()$Sign_Out_Rate),
       subtitle = "Sign Out Rate",
       icon = icon("percent"),
-      color = "lightblue"
+      color = "white"
     )
   })
 
