@@ -63,30 +63,35 @@ metricsServer <- function(id, reactiveData, reactiveMetrics) {
     )
   })
 
-  custom_colors_cover <- c("#1f77b4", "#17a2b8", "#4ac4b5", "#2ca02c", "#2ca02c", "#F28E2B", "#d62728")
-  output$attendanceByDivision <- renderPlotly({
-    data <- reactiveData()  # Ensure 'sales_data' is already loaded and contains the right columns
-    # Filter out rows where Sales or Type of Cover might be NA
-    data <- data[!is.na(data$Division), ]
-    # Group data by 'Type of Cover' and sum 'Sales', and count the occurrences
-    count_by_division <- data %>%
-      group_by(`Division`) %>%
-      summarise(Count = n(), .groups = 'drop')
-    # Generate a qualitative color palette
-    num_categories <- length(unique(count_by_division$`Division`))
-    # Create the donut chart
-    p <- plot_ly(count_by_division, labels = ~`Division`, values = ~Count, type = 'pie', hole = 0.2,
-                textposition = 'inside', 
-                textinfo = 'label+value+percent',  
-                insidetextorientation = 'tangetial',  
-                marker = list(colors = custom_colors_cover),
-                textfont = list(color = 'white', family = "Mulish", size = 10))
-    # Add title and display the plot
-    p <- p %>% layout(title = "Distribution of Attendance by Division",
-                      showlegend = TRUE,
-                      font = list(family = "Mulish"))
-    p
+custom_colors_cover <- c("#0d6efd", "#4ac4b5", "#1f77b4", "#2ca02c", "#2ca02c", "#F28E2B", "#d62728")
+output$attendanceByDivision <- renderPlotly({
+  data <- reactiveData()
+
+  # Filter out rows where Division might be NA and perform data manipulation
+  count_by_division <- data %>%
+    filter(!is.na(Division)) %>%
+    group_by(Division) %>%
+    summarise(Count = n(), .groups = 'drop') %>%
+    arrange(desc(Count))    
+
+  # Create funnel chart in Plotly
+  plot_ly(count_by_division, 
+          y = ~reorder(Division, -Count), 
+          x = ~Count, 
+          type = 'funnel', 
+          textinfo = "value+percent",
+          marker = list(colors = custom_colors_cover)) %>%
+    layout(
+      title = "Distribution of Attendance by Division",
+      yaxis = list(title = "Division"),
+      xaxis = list(title = "Number of Attendees"),
+      hoverlabel = list(bgcolor = '#0d6efd', font = list(color = 'white')),
+      plot_bgcolor = 'white',
+      paper_bgcolor = 'white',
+      font = list(family = "Mulish")
+    )
 })
+
 
   output$attendanceByTimePeriod <- renderPlot({
     data <- reactiveData() %>%
@@ -129,30 +134,39 @@ metricsServer <- function(id, reactiveData, reactiveMetrics) {
       )
   })
 
-  custom_colors_status <- c("#17a2b8", "#4ac4b5",  "#d62728","#1f77b4", "#F28E2B")
-  output$attendanceByStatus <- renderPlotly({
-    data <- reactiveData()  
-    # Filter out rows where Sales or Type of Cover might be NA
-    data <- data[!is.na(data$Status), ]
-    # Group data by 'Type of Cover' and sum 'Sales', and count the occurrences
-    count_by_status <- data %>%
-      group_by(`Status`) %>%
-      summarise(Count = n(), .groups = 'drop')
-    # Generate a qualitative color palette
-    num_categories <- length(unique(count_by_status$`Status`))
-    # Create the donut chart
-    p <- plot_ly(count_by_status, labels = ~`Status`, values = ~Count, type = 'pie', hole = 0.4,
-                textposition = 'inside', 
-                textinfo = 'label+value+percent',  
-                insidetextorientation = 'tangential',  
-                marker = list(colors = custom_colors_status),
-                textfont = list(color = 'white', family = "Mulish", size = 12))
-    # Add title and display the plot
-    p <- p %>% layout(title = "Distribution of attendance by Status",
-                      showlegend = TRUE,
-                      font = list(family = "Mulish"))
-    p
+output$attendanceByStatus <- renderPlotly({
+    data <- reactiveData() %>%
+      filter(Status != "", !is.na(Status)) %>%
+      group_by(Status) %>%
+      summarize(Count = n(), .groups = 'drop') %>%
+      arrange(desc(Count))
+    
+    # Calculate cumulative values for the waterfall chart
+    data <- data %>%
+      mutate(Cumulative = cumsum(Count))
+    
+    plot_ly(data, 
+            x = ~Status, 
+            y = ~Count, 
+            type = 'waterfall', 
+            texttemplate = ~paste(formatC(Count, format = "f", big.mark = ",", digits = 0), 
+                                  " (", round((Count / sum(data$Count)) * 100, 2), "%)", sep = ""),
+            textposition = "inside", 
+            measure = rep("relative", nrow(data)),  # Set measure to relative for each cover type
+            connector = list(line = list(color = "blue", width = 2)),
+            increasing = list(marker = list(color = '#0d6efd')),  # Set a professional blue color for increasing values
+            decreasing = list(marker = list(color = '#0d6efd')),  # Set the same color for decreasing values
+            totals = list(marker = list(color = '#0d6efd'))  # Set the same color for totals if needed
+            ) %>%
+      layout(
+        title = "Distribution of Attendance by Status",
+        yaxis = list(title = "Count"),
+        xaxis = list(title = "Status"),
+        hoverlabel = list(bgcolor = '#0d6efd', font = list(color = 'white')),
+        plot_bgcolor = 'white',
+        paper_bgcolor = 'white',
+        font = list(family = "Mulish")
+      )
 })
-
   })
 }
