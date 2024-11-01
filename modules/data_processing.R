@@ -23,7 +23,7 @@ read_and_process_data <- function(filepath) {
            Day_of_week = weekdays(`Date/Time`),  # Extract the day of the week from 'Date/Time'
            Division_Name = paste(Division, Name, sep = " - "),  # Combine 'Division' and 'Name'
            Time_str = sprintf("%02d:%02d:%02d", as.integer(hour(Time)), as.integer(minute(Time)), as.integer(second(Time))),
-           FirstSignInTime = as.POSIXct(paste(`Date/Time`, Time_str), format = "%Y-%m-%d %H:%M:%S")
+           FirstSignInTime = as.POSIXct(paste(`Date/Time`, Time_str), format = "%Y-%m-%d %H:%M:%S", tz = "Africa/Nairobi")
          )
   
   return(Data)
