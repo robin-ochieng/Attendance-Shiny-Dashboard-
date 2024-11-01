@@ -77,7 +77,7 @@ ui <- dashboardPage(
       tabItem(tabName = "data2View", earlySignInDataUI("earlySignInDataMod")),
       tabItem(tabName = "data3View", lateSignInDataUI("lateSignInDataMod"))
     ),
-    div(class = "body-footer", "© 2024 Attendance Dashboard - Powered by Robin") 
+    div(class = "body-footer", "© 2024 Attendance Dashboard") 
   ),
   title = "Attendance Dashboard",
   skin = "blue",
@@ -98,6 +98,9 @@ ui <- dashboardPage(
 )
 
 server <- function(input, output, session) {
+
+    # Set the time zone globally
+  Sys.setenv(TZ = "Africa/Nairobi")
 
   observeEvent(input$toggleControlbar, {
     updateBoxSidebar("dashboardControlbar")
