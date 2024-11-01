@@ -1,12 +1,12 @@
-name: AttendanceDashboard
-title: AttendanceDashboard
+name: AttendanceReport
+title: AttendanceReport
 username: kafsshinyapps
 account: kafsshinyapps
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
-appId: 12836744
-bundleId: 9178429
-url: https://kafsshinyapps.shinyapps.io/AttendanceDashboard/
+appId: 13059718
+bundleId: 9254238
+url: https://kafsshinyapps.shinyapps.io/AttendanceReport/
 version: 1
 asMultiple: FALSE
 asStatic: FALSE
