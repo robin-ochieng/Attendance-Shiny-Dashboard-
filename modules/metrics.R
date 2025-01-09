@@ -69,10 +69,10 @@ output$attendanceByDivision <- renderPlotly({
 
   # Filter out rows where Division might be NA and perform data manipulation
   count_by_division <- data %>%
-    filter(!is.na(Division)) %>%
-    group_by(Division) %>%
-    summarise(Count = n(), .groups = 'drop') %>%
-    arrange(desc(Count))    
+    dplyr::filter(!is.na(Division)) %>%
+    dplyr::group_by(Division) %>%
+    dplyr::summarise(Count = n(), .groups = 'drop') %>%
+    dplyr::arrange(desc(Count))    
 
   # Create funnel chart in Plotly
   plot_ly(count_by_division, 
@@ -95,8 +95,8 @@ output$attendanceByDivision <- renderPlotly({
 
   output$attendanceByTimePeriod <- renderPlot({
     data <- reactiveData() %>%
-      group_by(Time_Period) %>%
-      summarize(Count = n(), .groups = 'drop')
+      dplyr::group_by(Time_Period) %>%
+      dplyr::summarize(Count = n(), .groups = 'drop')
     ggplot(data, aes(x = reorder(Time_Period, Count), y = Count, fill = "#0d6efd")) +
       geom_bar(stat = "identity") +  
       scale_fill_identity() +  
@@ -118,9 +118,9 @@ output$attendanceByDivision <- renderPlotly({
 
   output$attendance_over_time <- renderPlotly({
     data <- reactiveData() %>%
-      group_by(Hour) %>%
-      summarise(Status = n(), .groups = "drop") %>%
-      arrange(Hour)  
+      dplyr::group_by(Hour) %>%
+      dplyr::summarise(Status = n(), .groups = "drop") %>%
+      dplyr::arrange(Hour)  
     # Plotting
     plot_ly(data, x = ~Hour, y = ~Status, type = 'scatter', mode = 'lines+markers',
             line = list(color = '#1CA4F8'), marker = list(color = '#0d6efd')) %>%
@@ -136,10 +136,10 @@ output$attendanceByDivision <- renderPlotly({
 
 output$attendanceByStatus <- renderPlotly({
     data <- reactiveData() %>%
-      filter(Status != "", !is.na(Status)) %>%
-      group_by(Status) %>%
-      summarize(Count = n(), .groups = 'drop') %>%
-      arrange(desc(Count))
+      dplyr::filter(Status != "", !is.na(Status)) %>%
+      dplyr::group_by(Status) %>%
+      dplyr::summarize(Count = n(), .groups = 'drop') %>%
+      dplyr::arrange(desc(Count))
     
     # Calculate cumulative values for the waterfall chart
     data <- data %>%
