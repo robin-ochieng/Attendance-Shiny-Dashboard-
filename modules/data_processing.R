@@ -51,10 +51,10 @@ calculate_metrics <- function(Data) {
 # Function to summarize early sign-in times
 calculate_early_sign_ins <- function(Data) {
   EarlySignInDetails <- Data %>%
-    filter(Status == "Sign In") %>%
+    dplyr::filter(Status == "Sign In") %>%
     group_by(`Date/Time`, Name, Division) %>%
     summarise(FirstSignInTime = min(FirstSignInTime), .groups = 'drop') %>%
-    filter(FirstSignInTime < as.POSIXct(paste(`Date/Time`, "08:15:00"), format = "%Y-%m-%d %H:%M:%S"))
+    dplyr::filter(FirstSignInTime < as.POSIXct(paste(`Date/Time`, "08:15:00"), format = "%Y-%m-%d %H:%M:%S"))
   
   return(EarlySignInDetails)
 }
