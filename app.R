@@ -10,6 +10,7 @@ library(fresh)
 library(plotly)
 library(shinycssloaders)
 library(shinyjs)
+library(hms)
 
 # Define a custom theme using bslib
 my_theme <- bs_theme(
@@ -108,8 +109,13 @@ server <- function(input, output, session) {
   
   # Load and process data
   Data <- read_and_process_data("data/Data.xlsx")
-  
+  print(Data)
+  print(names(Data))
+  print(Data[, (ncol(Data) - 4):ncol(Data)])
+
+
   observe({
+    req(Data)
     attendance_data <- Data %>%
       mutate(Month = as.character(Month),  
              Month = trimws(Month),
@@ -119,13 +125,17 @@ server <- function(input, output, session) {
     # Add "All" option for months
     month_choices <- c("All" = "All", month_choices)
     year_choices <- attendance_data$Year[!is.na(attendance_data$Year)] %>% unique()
+    # Add "All" option for years
+    year_choices <- c("All" = "All", year_choices)
     # Update the select Input for months and years
     updateSelectInput(session, "attendance_month", choices = month_choices, selected = "All")
-    updateSelectInput(session, "attendance_year", choices = year_choices, selected = format(Sys.Date(), "%Y"))
+    updateSelectInput(session, "attendance_year", choices = year_choices, selected = 2024)
   })
   
+
   # Reactive expression to filter the data based on selected month and year
   filtered_data__attendance <- reactive({
+    req(Data)
     attendance_data <- Data %>%
       mutate(Month = as.character(Month),  
              Month = trimws(Month),
@@ -138,6 +148,7 @@ server <- function(input, output, session) {
         filter(Month == input$attendance_month, Year == as.numeric(input$attendance_year))
     }
   })
+  
   
   # Recalculate metrics based on filtered data
   attendance_metrics <- reactive({
