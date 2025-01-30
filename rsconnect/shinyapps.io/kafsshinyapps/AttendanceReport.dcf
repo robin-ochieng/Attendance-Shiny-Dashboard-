@@ -5,7 +5,7 @@ account: kafsshinyapps
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 13059718
-bundleId: 9625739
+bundleId: 9721981
 url: https://kafsshinyapps.shinyapps.io/AttendanceReport/
 version: 1
 asMultiple: FALSE

@@ -95,8 +95,8 @@ ui <- dashboardPage(
       radioButtons(
         inputId = "filter_type", 
         label = "Filter by:",
-        choices = c("Last 7 days", "Month & Year"), 
-        selected = "Last 7 days"
+        choices = c("Weekly Report", "All Time Report"), 
+        selected = "Weekly Report"
       ),
       selectInput(inputId = "attendance_month", label = "Select Month", choices = NULL),
       selectInput(inputId = "attendance_year", label = "Select Year", choices = NULL)
@@ -148,7 +148,7 @@ server <- function(input, output, session) {
       )
 
     # If user selects "Last 7 days", filter based on max date in `Date/Time` column
-    if (input$filter_type == "Last 7 days") {
+    if (input$filter_type == "Weekly Report") {
       # Ensure your `Date/Time` column is properly parsed as a Date or POSIX date-time
       # Adjust the column name below if it differs
       max_date <- max(attendance_data$`Date/Time`, na.rm = TRUE)
