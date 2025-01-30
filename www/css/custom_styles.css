@@ -14,20 +14,21 @@ body, .content-wrapper, .right-side, .main-footer, .main-header, .sidebar, .cont
     display: flex;
     align-items: center;
     justify-content: flex-start; /* Align items to the start of the container */
-    margin-left: 150px; /* Match the sidebar width */
+    margin-left: 200px; /* Match the sidebar width */
     position: relative; /* Ensure the container is positioned correctly */
-    width: 300px; /* Match the width of the sidebar-footer */
+    width: 270px; /* Match the width of the sidebar-footer */
     text-align: center; /* Center the title text */
-    padding: 5px 0; /* Add padding to give some space around the title */
+    padding: 4px 8px; /* Add padding to give some space around the title */
     background-color: #fff; /* Light background color to distinguish the title area */
     border-radius: 8px; /* Optional: Add rounded corners for a modern look */
-    box-shadow: 0 1px 5px rgba(0, 0, 0, 0.1); /* Subtle shadow for a more professional look */
+    border: 1px solid #625f5f;
+    box-shadow: 0 1px 5px rgba(0, 0, 0, 0.15); /* Subtle shadow for a more professional look */
 
 }
 
 /* Style for the header title */
 .header-title {
-    font-size: 24px;
+    font-size: 20px;
     font-weight: bold;
     color: #0137A6;
     padding-left: 15px; /* Space after the vertical line */
@@ -40,16 +41,15 @@ body, .content-wrapper, .right-side, .main-footer, .main-header, .sidebar, .cont
 
 /* Additional padding to push sidebar items down */
 .sidebar-menu {
-    padding-top: 140px; 
+    padding-top: 190px; 
 }
 
 /* Set the background color of the sidebar */
 .main-sidebar {
     background-color: #fff !important;  /* Apply the desired color */
     width: 200px;
-    padding-bottom: 90px;
     position: fixed; /* Keep the sidebar fixed */
-    top: 60px;   
+    top: 100px;   
     height: calc(100% - 60px);
     box-shadow: none !important;
 }
@@ -83,9 +83,11 @@ body, .content-wrapper, .right-side, .main-footer, .main-header, .sidebar, .cont
   }
   
   .control-button {
+    font-weight: bold;
     margin-right: 10px; 
-    background-color: #007bff;
-    color: white; ;
+    background-color: #FFFFFF;
+    color: #0137A6 ;
+    border: 1px solid #625f5f;
   }
 
     /* Sidebar Footer*/
@@ -100,7 +102,7 @@ body, .content-wrapper, .right-side, .main-footer, .main-header, .sidebar, .cont
   }
   
   .sidebar-footer img {
-    height: 80px; /* Adjust the height of the logo as needed */
+    height: 60px; /* Adjust the height of the logo as needed */
     max-width: 100%; /* Ensure the logo scales within the container */
     background-color: #ffffff; /* Optional: Add a background behind the logo */
     border-radius: 8px; /* Optional: Add rounded corners for a modern look */
