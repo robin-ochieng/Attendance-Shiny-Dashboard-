@@ -92,6 +92,12 @@ ui <- dashboardPage(
       title = "Filters",
       background = "white",
       class = "bs4-card-custom",
+      radioButtons(
+        inputId = "filter_type", 
+        label = "Filter by:",
+        choices = c("Last 7 days", "Month & Year"), 
+        selected = "Last 7 days"
+      ),
       selectInput(inputId = "attendance_month", label = "Select Month", choices = NULL),
       selectInput(inputId = "attendance_year", label = "Select Year", choices = NULL)
     )
@@ -109,9 +115,7 @@ server <- function(input, output, session) {
   
   # Load and process data
   Data <- read_and_process_data("data/Data.xlsx")
-  print(Data)
-  print(names(Data))
-  print(Data[, (ncol(Data) - 4):ncol(Data)])
+
 
 
   observe({
@@ -137,16 +141,34 @@ server <- function(input, output, session) {
   filtered_data__attendance <- reactive({
     req(Data)
     attendance_data <- Data %>%
-      mutate(Month = as.character(Month),  
-             Month = trimws(Month),
-             Year = as.numeric(as.character(Year)))
-    if (input$attendance_month == "All") {
-      attendance_data %>%
-        filter(Year == as.numeric(input$attendance_year))
+      mutate(
+        Month = as.character(Month),
+        Month = trimws(Month),
+        Year  = as.numeric(as.character(Year))
+      )
+
+    # If user selects "Last 7 days", filter based on max date in `Date/Time` column
+    if (input$filter_type == "Last 7 days") {
+      # Ensure your `Date/Time` column is properly parsed as a Date or POSIX date-time
+      # Adjust the column name below if it differs
+      max_date <- max(attendance_data$`Date/Time`, na.rm = TRUE)
+      cutoff_date <- max_date - days(7)
+      
+      attendance_data <- attendance_data %>%
+        filter(`Date/Time` >= cutoff_date)
+      
     } else {
-      attendance_data %>%
-        filter(Month == input$attendance_month, Year == as.numeric(input$attendance_year))
+      # Else user chooses "Month & Year", revert to current month-year filter logic
+      if (input$attendance_month == "All") {
+        attendance_data <- attendance_data %>%
+          filter(Year == as.numeric(input$attendance_year))
+      } else {
+        attendance_data <- attendance_data %>%
+          filter(Month == input$attendance_month, Year == as.numeric(input$attendance_year))
+      }
     }
+
+    attendance_data
   })
   
   
