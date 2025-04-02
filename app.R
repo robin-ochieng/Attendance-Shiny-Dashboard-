@@ -78,7 +78,7 @@ ui <- dashboardPage(
       tabItem(tabName = "data2View", earlySignInDataUI("earlySignInDataMod")),
       tabItem(tabName = "data3View", lateSignInDataUI("lateSignInDataMod"))
     ),
-    div(class = "body-footer", "© 2024 Attendance Dashboard") 
+    div(class = "body-footer", "© 2025 Attendance Dashboard") 
   ),
   title = "Attendance Dashboard",
   skin = "blue",
