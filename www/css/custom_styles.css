@@ -21,7 +21,7 @@ body, .content-wrapper, .right-side, .main-footer, .main-header, .sidebar, .cont
     padding: 4px 8px; /* Add padding to give some space around the title */
     background-color: #fff; /* Light background color to distinguish the title area */
     border-radius: 8px; /* Optional: Add rounded corners for a modern look */
-    border: 1px solid #625f5f;
+    border: none; /* Remove any border around the container */
     box-shadow: 0 1px 5px rgba(0, 0, 0, 0.15); /* Subtle shadow for a more professional look */
 
 }
