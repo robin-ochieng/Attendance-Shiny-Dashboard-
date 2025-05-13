@@ -83,10 +83,10 @@ calculate_early_sign_outs <- function(Data) {
   EarlySignOutsDetails <- Data %>%
     filter(Status == "Sign Out") %>%
     group_by(Date_only, Name, Division) %>%
-    summarise(FirstSignOutTime = min(FullDateTime), .groups = 'drop') %>%
+    summarise(FirstSignOutTime = max(FullDateTime), .groups = 'drop') %>%
     filter(
-      FirstSignOutTime >= as.POSIXct(paste(Date_only, "17:00:00"), format = "%Y-%m-%d %H:%M:%S", tz = "Africa/Nairobi"),
-      FirstSignOutTime <  as.POSIXct(paste(Date_only, "18:00:00"), format = "%Y-%m-%d %H:%M:%S", tz = "Africa/Nairobi")
+      FirstSignOutTime >= as.POSIXct(paste(Date_only, "16:45:00"), format = "%Y-%m-%d %H:%M:%S", tz = "Africa/Nairobi"),
+      FirstSignOutTime <  as.POSIXct(paste(Date_only, "17:00:00"), format = "%Y-%m-%d %H:%M:%S", tz = "Africa/Nairobi")
     )
   
   return(EarlySignOutsDetails)
@@ -98,9 +98,9 @@ calculate_late_sign_outs <- function(Data) {
   LateSignOutsDetails <- Data %>%
     filter(Status == "Sign Out") %>%  # Filter only sign-in records
     group_by(Date_only, Name, Division) %>%  # Group by Date/Time, Name, and Division
-    summarise(FirstSignOutTime = min(FullDateTime), .groups = "drop") %>%  # Calculate minimum sign-in time for each group
+    summarise(FirstSignOutTime = max(FullDateTime), .groups = "drop") %>%  # Calculate minimum sign-in time for each group
     filter(
-      FirstSignOutTime >= as.POSIXct(paste(Date_only, "18:00:00"), format = "%Y-%m-%d %H:%M:%S", tz = "Africa/Nairobi") &
+      FirstSignOutTime >= as.POSIXct(paste(Date_only, "17:01:00"), format = "%Y-%m-%d %H:%M:%S", tz = "Africa/Nairobi") &
       FirstSignOutTime <  as.POSIXct(paste(as.Date(Date_only) + 1, "02:00:00"), format = "%Y-%m-%d %H:%M:%S", tz = "Africa/Nairobi")
     )  # Filter for late sign-ins after 8:15 AM
   
