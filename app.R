@@ -30,6 +30,8 @@ source("modules/data_processing.R")
 source("modules/metrics.R")
 source("modules/earlySignInsData.R")
 source("modules/lateSignInsData.R")
+source("modules/earlySignOutsData.R")
+source("modules/lateSignOutsData.R")
 #source("modules/attendance_data.R")
 
 
@@ -57,10 +59,11 @@ ui <- dashboardPage(
     minified = FALSE,
     width = 150,
     sidebarMenu(
-      menuItem("Dashboard", tabName = "metrics", icon = icon("tachometer-alt")),
-      #menuItem("Data View", tabName = "dataView", icon = icon("table")),
-      menuItem("Early Sign Ins", tabName = "data2View", icon = icon("clock")),
-      menuItem("Late Sign Ins", tabName = "data3View", icon = icon("user-clock"))
+      menuItem("Dashboard", tabName = "metrics", icon = icon("chart-line")),
+      menuItem("Early Sign Ins", tabName = "data2View", icon = icon("sign-in-alt")),
+      menuItem("Late Sign Ins", tabName = "data3View", icon = icon("user-clock")),
+      menuItem("Early Sign Outs", tabName = "data4View", icon = icon("sign-out-alt")),
+      menuItem("Late Sign Outs", tabName = "data5View", icon = icon("user-clock"))
     ),
     div(class = "sidebar-footer",
         img(src = "images/kenbright2.png")
@@ -76,7 +79,9 @@ ui <- dashboardPage(
       tabItem(tabName = "metrics", metricsUI("metricsMod")),
       #tabItem(tabName = "dataView", attendanceDataUI("attendanceDataMod")),
       tabItem(tabName = "data2View", earlySignInDataUI("earlySignInDataMod")),
-      tabItem(tabName = "data3View", lateSignInDataUI("lateSignInDataMod"))
+      tabItem(tabName = "data3View", lateSignInDataUI("lateSignInDataMod")),
+      tabItem(tabName = "data4View", earlySignOutsDataUI("earlySignOutsDataMod")),
+      tabItem(tabName = "data5View", lateSignOutsDataUI("lateSignOutsDataMod"))
     ),
     div(class = "body-footer", "© 2025 Attendance Dashboard") 
   ),
@@ -186,7 +191,15 @@ server <- function(input, output, session) {
   LateSignInDetails <- reactive({
     calculate_late_sign_ins(filtered_data__attendance())
   })
+  # Recalculate early sign-outs based on filtered data
+  EarlySignOutsDetails <- reactive({
+    calculate_early_sign_outs(filtered_data__attendance())
+  })
   
+  # Recalculate late sign-outs based on filtered data
+  LateSignOutsDetails <- reactive({
+    calculate_late_sign_outs(filtered_data__attendance())
+  })
   # Call the attendance metrics module
   metricsServer("metricsMod", filtered_data__attendance, attendance_metrics)
   
@@ -198,6 +211,12 @@ server <- function(input, output, session) {
   
   #call the late sign-in data module
   lateSignInDataServer("lateSignInDataMod", LateSignInDetails)
+  
+  #call the early sign-out data module
+  earlySignOutsDataServer("earlySignOutsDataMod", EarlySignOutsDetails)
+  
+  #call the late sign-in data module
+  lateSignOutsDataServer("lateSignOutsDataMod", LateSignOutsDetails)
 }
 
 shinyApp(ui, server)
