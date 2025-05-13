@@ -28,69 +28,59 @@ metricsServer <- function(id, reactiveData, reactiveMetrics) {
   moduleServer(id, function(input, output, session) {
 
 
-    output$totalSignIn <- renderValueBox({
-    valueBox(
-      format(reactiveMetrics()$Total_Sign_In, big.mark = ","),
-      subtitle = "Total Sign Ins",
-      icon = NULL,
-      color = "white"
-    )
-  })
-  output$totalSignOut <- renderValueBox({
-    valueBox(
-      format(reactiveMetrics()$Total_Sign_Out, big.mark = ","),
-      subtitle = "Total Sign Outs",
-      icon = NULL,
-      color = "white"
-    )
+  # Total Sign Ins – Calm blue
+  output$totalSignIn <- renderUI({
+    total <- format(reactiveMetrics()$Total_Sign_In, big.mark = ",")
+    customValueBox("Total Sign Ins", total, "#2C3E50")  # Charcoal blue
   })
 
-  output$signInRate <- renderValueBox({
-    valueBox(
-      sprintf("%.2f%%", reactiveMetrics()$Sign_In_Rate),
-      subtitle = "Sign In Rate",
-      icon = NULL,
-      color = "white"
-    )
+  # Total Sign Outs – Elegant gray
+  output$totalSignOut <- renderUI({
+    total <- format(reactiveMetrics()$Total_Sign_Out, big.mark = ",")
+    customValueBox("Total Sign Outs", total, "#7F8C8D")  # Concrete gray
   })
 
-  output$signOutRate <- renderValueBox({
-    valueBox(
-      sprintf("%.2f%%", reactiveMetrics()$Sign_Out_Rate),
-      subtitle = "Sign Out Rate",
-      icon = NULL,
-      color = "white"
-    )
+  # Sign In Rate – Strategic green
+  output$signInRate <- renderUI({
+    rate <- sprintf("%.2f%%", reactiveMetrics()$Sign_In_Rate)
+    customValueBox("Sign In Rate", rate, "#27AE60")  # Emerald green
   })
 
-custom_colors_cover <- c("#0d6efd", "#4ac4b5", "#1f77b4", "#2ca02c", "#2ca02c", "#F28E2B", "#d62728")
-output$attendanceByDivision <- renderPlotly({
-  data <- reactiveData()
+  # Sign Out Rate – Confident orange
+  output$signOutRate <- renderUI({
+    rate <- sprintf("%.2f%%", reactiveMetrics()$Sign_Out_Rate)
+    customValueBox("Sign Out Rate", rate, "#E67E22")  # Carrot orange
+  })
 
-  # Filter out rows where Division might be NA and perform data manipulation
-  count_by_division <- data %>%
-    dplyr::filter(!is.na(Division)) %>%
-    dplyr::group_by(Division) %>%
-    dplyr::summarise(Count = n(), .groups = 'drop') %>%
-    dplyr::arrange(desc(Count))    
 
-  # Create funnel chart in Plotly
-  plot_ly(count_by_division, 
-          y = ~reorder(Division, -Count), 
-          x = ~Count, 
-          type = 'funnel', 
-          textinfo = "value+percent",
-          marker = list(colors = custom_colors_cover)) %>%
-    layout(
-      title = "Distribution of Attendance by Division",
-      yaxis = list(title = "Division"),
-      xaxis = list(title = "Number of Attendees"),
-      hoverlabel = list(bgcolor = '#0d6efd', font = list(color = 'white')),
-      plot_bgcolor = 'white',
-      paper_bgcolor = 'white',
-      font = list(family = "Mulish")
-    )
-})
+  custom_colors_cover <- c("#0d6efd", "#4ac4b5", "#1f77b4", "#2ca02c", "#2ca02c", "#F28E2B", "#d62728")
+  output$attendanceByDivision <- renderPlotly({
+    data <- reactiveData()
+
+    # Filter out rows where Division might be NA and perform data manipulation
+    count_by_division <- data %>%
+      dplyr::filter(!is.na(Division)) %>%
+      dplyr::group_by(Division) %>%
+      dplyr::summarise(Count = n(), .groups = 'drop') %>%
+      dplyr::arrange(desc(Count))    
+
+    # Create funnel chart in Plotly
+    plot_ly(count_by_division, 
+            y = ~reorder(Division, -Count), 
+            x = ~Count, 
+            type = 'funnel', 
+            textinfo = "value+percent",
+            marker = list(colors = custom_colors_cover)) %>%
+      layout(
+        title = "Distribution of Attendance by Division",
+        yaxis = list(title = "Division"),
+        xaxis = list(title = "Number of Attendees"),
+        hoverlabel = list(bgcolor = '#0d6efd', font = list(color = 'white')),
+        plot_bgcolor = 'white',
+        paper_bgcolor = 'white',
+        font = list(family = "Mulish")
+      )
+  })
 
 
   output$attendanceByTimePeriod <- renderPlot({
