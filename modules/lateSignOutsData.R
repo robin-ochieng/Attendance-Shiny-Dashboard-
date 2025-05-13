@@ -1,7 +1,7 @@
 # UI for displaying late sign-ins data
 lateSignOutsDataUI <- function(id) {
   ns <- NS(id)
-  box(title = "Late SignOuts Data",
+  box(title = "Late SignOuts Data ()",
       status = "white",
       solidHeader = TRUE,
       collapsible = TRUE,
