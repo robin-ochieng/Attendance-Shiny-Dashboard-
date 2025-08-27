@@ -1,3 +1,6 @@
 data/
 www/images/
 rsconnect/
+*.Rhistory
+.Rhistory
+.RData

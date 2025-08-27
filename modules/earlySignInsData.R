@@ -1,15 +1,16 @@
 # UI for displaying data tables
 earlySignInDataUI <- function(id) {
-  ns <- NS(id)
-  box(title = "Early SignIns Data",
+  ns <- NS(id) 
+  box(title = "Early SignIns Data(Before 8:15 AM)",
       status = "white", 
       solidHeader = TRUE, 
       collapsible = TRUE, 
       width = 12, 
       maximizable = TRUE,
-      div(id = "divisionSelectContainer",
+  div(class = "divisionSelectContainer",
       selectInput(ns("divisionSelect"), "Select Division:", choices = c("All Divisions", "Advisory", "Corporate and Retail", "Directors Wing"))
       ),
+  # DataTables provides export buttons; custom shiny download buttons removed per request
       DTOutput(ns("dataTable2")) %>% withSpinner(type = 6))
 }
 
@@ -17,23 +18,58 @@ earlySignInDataUI <- function(id) {
 earlySignInDataServer <- function(id, EarlySignInDetails) {
   moduleServer(id, function(input, output, session) {
     filteredData <- reactive({
-      data <- EarlySignInDetails()
+  data <- EarlySignInDetails()
+  req(!is.null(data))
       if (input$divisionSelect != "All Divisions") {
         data <- data[data$Division == input$divisionSelect, ]
       }
       data
     })
+
+  # CSV download
+  output$download_csv <- downloadHandler(
+      filename = function() {
+        paste0("early_signins_", Sys.Date(), ".csv")
+      },
+      content = function(file) {
+    dat <- filteredData()
+    write_csv_safe(dat, file)
+      },
+      contentType = "text/csv"
+    )
+
+    # Excel download
+    output$download_xlsx <- downloadHandler(
+      filename = function() {
+        paste0("early_signins_", Sys.Date(), ".xlsx")
+      },
+      content = function(file) {
+        dat <- filteredData()
+        write_xlsx_safe(dat, file)
+      },
+      contentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    )
     output$dataTable2 <- renderDT({
       datatable(
         filteredData(),
                 options = list(
-                    dom = '<"top"f>rt<"bottom"lip><"clear">',  # Allows for buttons, searching, pagination
+                    dom = '<"top"Bf>rt<"bottom"lip><"clear">',  # Show DT export buttons alongside search
+        buttons = list(
+          list(extend = "csv",
+            text = '<i class="fas fa-file-csv"></i> CSV',
+            title = paste0("early_signins_", Sys.Date()),
+            className = "btn btn-sm export-btn"),
+          list(extend = "excel",
+            text = '<i class="fas fa-file-excel"></i> Excel',
+            title = paste0("early_signins_", Sys.Date()),
+            className = "btn btn-sm export-btn")
+        ),
                     autoWidth = TRUE,
                     responsive = TRUE,
                     paging = TRUE,
-                    info = TRUE, # Disable showing table information
+                    info = TRUE, 
                     searching = TRUE, 
-                    pagelength = 30,
+                    pageLength = 30,
                     scrollX = TRUE,
                     searchHighlight = TRUE,
                     columnDefs = list(
@@ -47,22 +83,27 @@ earlySignInDataServer <- function(id, EarlySignInDetails) {
                             "  return data;",
                             "}"
                             )),
-                        list(targets = 4, render = JS(
-                            "function(data, type, row) {",
-                            "  if (type === 'display') {",
-                            "    var time = new Date(data);",
-                            "    return time.getHours() + ':' + time.getMinutes() + ':' + time.getSeconds();",
-                            "  }",
-                            "  return data;",
-                            "}"
-                            ))
+            list(targets = 4, render = JS(
+              "function(data, type, row, meta) {",
+              "  function pad(n){ return (n<10?'0':'') + n; }",
+              "  function fmt12(h, m){ var p = h >= 12 ? 'PM' : 'AM'; h = h % 12; if (h === 0) h = 12; return pad(h) + ':' + pad(m) + ' ' + p; }",
+              "  if (type !== 'display' && type !== 'filter') return data;",
+              "  if (data == null || data === '') return '';",
+              "  var m = /^\\s*(\\d{1,2}):(\\d{1,2})(?::(\\d{1,2}))?/.exec(data);",
+              "  if (m) { var h = parseInt(m[1],10), min = parseInt(m[2],10); if (isNaN(h) || isNaN(min)) return data; return fmt12(h, min); }",
+              "  var d = new Date(data);",
+              "  if (!isNaN(d.getTime())) { return fmt12(d.getHours(), d.getMinutes()); }",
+              "  return data;",
+              "}"
+              ))
                     ),
                     initComplete = JS(
                     "function(settings, json) {",
-                    "$(this.api().table().header()).css({'background-color': '#fff', 'color': black, 'text-align': 'center'});",
+                    "$(this.api().table().header()).css({'background-color': '#fff', 'color': 'black', 'text-align': 'center'});",
                     "}"
                     )
-                ))
+                ),
+                extensions = c('Buttons'))
     }, server = FALSE) 
   })
 }

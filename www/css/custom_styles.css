@@ -110,12 +110,110 @@ body, .content-wrapper, .right-side, .main-footer, .main-header, .sidebar, .cont
     padding: 10px; /* Optional: Add a slight shadow around the logo */
   }
 
+/* Ensure controlbar content (like date pickers) is not clipped or hidden */
+.controlbar, .controlbar-content, .control-sidebar, .control-sidebar-content {
+    overflow: visible !important;
+}
+
+/* Boost z-index for datepicker popups so they appear above charts/tables */
+.datepicker, .daterangepicker, .dropdown-menu {
+    z-index: 2000 !important;
+}
+
+/* Air Datepicker (shinyWidgets) visibility and positioning */
+.air-datepicker-global-container, .air-datepicker {
+    z-index: 2050 !important; /* above charts/cards */
+}
+
+.control-sidebar .air-datepicker-global-container,
+.control-sidebar .air-datepicker {
+    overflow: visible !important;
+}
+
+/* Pin air-datepicker to the right side to prevent off-screen hiding while navigating months */
+.air-datepicker-global-container {
+    left: auto !important;
+    right: 24px !important;
+}
+
+/* Keep the datepicker anchored inside the controlbar; prevent it from drifting right */
+/* Place the calendar just under the control bar, aligned to its right edge */
+.control-sidebar .datepicker-dropdown,
+.control-sidebar .datepicker.dropdown-menu {
+    left: auto !important;
+    right: 24px !important; /* a bit of padding from the edge */
+    transform: none !important;
+}
+
+/* Stabilize width and prevent reflow jumps when switching months */
+.datepicker.dropdown-menu,
+.datepicker-dropdown,
+.datepicker {
+    min-width: unset !important; /* allow content to define width */
+    width: auto !important;
+    /* Do not force left/right globally to avoid interfering outside controlbar */
+}
+
+/* Improve internal table sizing to remove extra blank space */
+.datepicker table {
+    table-layout: fixed;
+}
+.datepicker .datepicker-days table.table-condensed {
+    width: auto !important;
+}
+
+/* Ensure the popup doesn't get cut off horizontally */
+.control-sidebar, .control-sidebar-content {
+    overflow-x: visible !important;
+}
+
     /* CSS for select input styling */
-    #divisionSelectContainer {
+    .divisionSelectContainer {
         width: 30%; /* Adjust the width of the select input as needed */
         float: left; /* Align to the left */
         margin-right: 20px; /* Add some space to the right of the select input */
     }
+    
+/* Download button toolbar next to filters */
+
+/* Hide any legacy custom shiny download button group if present */
+.download-btn-group { display: none; }
+
+/* Style DataTables export buttons (CSV/Excel) */
+.dt-buttons .btn, .dt-button, .buttons-html5 {
+    background-color: #e0e0e0 !important; /* gray */
+    color: #333 !important;
+    border: 1px solid #bdbdbd !important;
+    border-radius: 6px !important;
+    padding: 6px 12px !important;
+    font-weight: 600 !important;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.08) !important;
+    transition: all 0.15s ease-in-out !important;
+    margin-left: 8px !important;
+}
+
+.dt-buttons .btn:hover, .dt-button:hover, .buttons-html5:hover,
+.dt-buttons .btn:focus, .dt-button:focus, .buttons-html5:focus {
+    background-color: #d5d5d5 !important;
+    color: #111 !important;
+}
+
+/* Add spacing for the icon inside DT buttons */
+.dt-buttons .btn i, .dt-button i, .buttons-html5 i {
+    margin-right: 6px;
+}
+
+/* Optional: place DT buttons to the right like your previous blue buttons */
+div.dataTables_wrapper div.dt-buttons {
+    float: right;
+}
+
+@media (max-width: 768px) {
+    div.dataTables_wrapper div.dt-buttons {
+        float: none;
+        margin-top: 8px;
+    }
+}
     
 
 /* Footer styling */

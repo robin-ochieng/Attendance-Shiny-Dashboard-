@@ -11,6 +11,8 @@ library(plotly)
 library(shinycssloaders)
 library(shinyjs)
 library(hms)
+library(writexl) # for Excel downloads
+library(shinyWidgets) # stable date range picker
 
 # Define a custom theme using bslib
 my_theme <- bs_theme(
@@ -27,11 +29,13 @@ my_theme <- bs_theme(
 )
 
 source("modules/data_processing.R")
+source("modules/download_utils.R")
 source("modules/metrics.R")
 source("modules/earlySignInsData.R")
 source("modules/lateSignInsData.R")
 source("modules/earlySignOutsData.R")
 source("modules/lateSignOutsData.R")
+source("modules/customValueBox.R")
 #source("modules/attendance_data.R")
 
 
@@ -91,7 +95,8 @@ ui <- dashboardPage(
     skin = "info",
     title = "Filter Settings", 
     id = "dashboardControlbar",
-    width = 300,
+  width = 300,
+  collapsed = TRUE,
     bs4Card(
       width = 12,
       title = "Filters",
@@ -100,11 +105,31 @@ ui <- dashboardPage(
       radioButtons(
         inputId = "filter_type", 
         label = "Filter by:",
-        choices = c("Monthly Report", "All Time Report"), 
+        choices = c("Monthly Report", "All Time Report", "Custom Date Range"), 
         selected = "Monthly Report"
       ),
-      selectInput(inputId = "attendance_month", label = "Select Month", choices = NULL),
-      selectInput(inputId = "attendance_year", label = "Select Year", choices = NULL)
+      # Show Month/Year only when not custom range
+      conditionalPanel(
+        condition = "input.filter_type !== 'Custom Date Range'",
+        selectInput(inputId = "attendance_month", label = "Select Month", choices = NULL),
+        selectInput(inputId = "attendance_year", label = "Select Year", choices = NULL)
+      ),
+      # Custom date range picker (stable positioning)
+      conditionalPanel(
+        condition = "input.filter_type === 'Custom Date Range'",
+        airDatepickerInput(
+          inputId = "attendance_daterange",
+          label = "Select Date Range",
+          value = NULL,
+          range = TRUE,
+          autoClose = TRUE,
+          position = "left bottom",
+          update_on = "close",
+          dateFormat = "yyyy-mm-dd",
+          view = "days",
+          monthsField = "monthsShort"
+        )
+      )
     )
   )
 )
@@ -115,7 +140,10 @@ server <- function(input, output, session) {
   Sys.setenv(TZ = "Africa/Nairobi")
 
   observeEvent(input$toggleControlbar, {
-    updateBoxSidebar("dashboardControlbar")
+    bs4Dash::updateControlbar(
+      session = session,
+      id = "dashboardControlbar"
+    )
   })
   
   # Load and process data
@@ -139,6 +167,18 @@ server <- function(input, output, session) {
     # Update the select Input for months and years
     updateSelectInput(session, "attendance_month", choices = month_choices, selected = "All")
     updateSelectInput(session, "attendance_year", choices = year_choices, selected = 2024)
+
+    # Initialize date range to the last 30 days within available data (or full range if smaller)
+    if (!all(is.na(attendance_data$`Date/Time`))) {
+      min_date <- as.Date(min(attendance_data$`Date/Time`, na.rm = TRUE))
+      max_date <- as.Date(max(attendance_data$`Date/Time`, na.rm = TRUE))
+      start_default <- max(min_date, max_date - lubridate::days(30))
+      shinyWidgets::updateAirDateInput(
+        session = session,
+        inputId = "attendance_daterange",
+        value = c(format(start_default, "%Y-%m-%d"), format(max_date, "%Y-%m-%d"))
+      )
+    }
   })
   
 
@@ -152,18 +192,30 @@ server <- function(input, output, session) {
         Year  = as.numeric(as.character(Year))
       )
 
-    # If user selects "Last 7 days", filter based on max date in `Date/Time` column
     if (input$filter_type == "Monthly Report") {
-      # Ensure your `Date/Time` column is properly parsed as a Date or POSIX date-time
-      # Adjust the column name below if it differs
-      max_date <- max(attendance_data$`Date/Time`, na.rm = TRUE)
-      cutoff_date <- max_date - days(30)
-      
+      # Last 30 days based on max date in `Date/Time`
+      max_dt <- max(attendance_data$`Date/Time`, na.rm = TRUE)
+      cutoff_dt <- max_dt - days(30)
       attendance_data <- attendance_data %>%
-        filter(`Date/Time` >= cutoff_date)
-      
+        filter(`Date/Time` >= cutoff_dt)
+
+    } else if (input$filter_type == "Custom Date Range") {
+      # Use the selected date range (inclusive) from airDatepickerInput
+      dr <- input$attendance_daterange
+      # dr is typically a length-2 vector of "YYYY-MM-DD" strings; be defensive
+      if (is.null(dr)) return(attendance_data)
+      if (length(dr) == 1 && is.character(dr) && grepl(" to | - ", dr)) {
+        # Handle combined string values just in case
+        parts <- strsplit(dr, " to | - ")[[1]]
+        dr <- parts[1:2]
+      }
+      req(length(dr) >= 2)
+      start_date <- as.Date(dr[1])
+      end_date <- as.Date(dr[2])
+      attendance_data <- attendance_data %>%
+        filter(as.Date(`Date/Time`) >= start_date & as.Date(`Date/Time`) <= end_date)
     } else {
-      # Else user chooses "Month & Year", revert to current month-year filter logic
+      # Month & Year filter
       if (input$attendance_month == "All") {
         attendance_data <- attendance_data %>%
           filter(Year == as.numeric(input$attendance_year))
